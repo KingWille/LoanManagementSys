@@ -12,14 +12,28 @@ namespace LoanManagementSys.Managers
         int startID = 100;
         int memberNameID = 0;
 
-        private void AddMember(string name)
+        public MemberManager()
+        {
+            members = new List<Member>();
+        }
+        internal void AddMembersOnStart()
+        {
+
+            for(int i = 0; i < 25; i++)
+            {
+                members.Add(new Member(startID, "Member" + memberNameID.ToString()));
+                startID++;
+                memberNameID++;
+            }
+        }
+        internal void AddMember(string name)
         {
             members.Add(new Member(startID, "Member" + memberNameID.ToString()));
             startID++;
             memberNameID++;
         }
 
-        private void RemoveMember(int index) 
+        internal void RemoveMember(int index) 
         { 
             try
             {
@@ -31,7 +45,12 @@ namespace LoanManagementSys.Managers
             }
         }
 
-        private Member GetMember(int index)
+        internal int NumberOfMembers()
+        {
+            return members.Count;
+        }
+
+        internal Member GetMember(int index)
         {
             try
             {

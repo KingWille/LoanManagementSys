@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LoanManagementSys.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace LoanManagementSys.Tasks
             while(isRunning)
             {
                 int timer = rnd.Next(6, 16);
-                Program.productManager.AddNewTestProduct();
+                LoanSysManager.productManager.AddNewTestProduct();
                 Thread.Sleep(timer * 1000);                
             }
         }

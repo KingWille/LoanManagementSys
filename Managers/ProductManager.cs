@@ -83,7 +83,7 @@ namespace LoanManagementSys
             //one extra lines for the title, size and a blank line.
             String[] infoStrings = new string[products.Count + 3]; //See (x)
 
-            infoStrings[0] = $"Number of products availabale: {products.Count}"; //(1)
+            infoStrings[0] = $"Number of products available: {products.Count}"; //(1)
             infoStrings[1] = "";  //(2)
             int j = 2;
 
@@ -119,6 +119,11 @@ namespace LoanManagementSys
             product.Name = $"Product{lastProductID++}";
             products.Add(product);
             return product;
+        }
+
+        public int NumberOfProducts()
+        {
+            return products.Count;
         }
 
     }

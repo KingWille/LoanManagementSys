@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LoanManagementSys.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,18 @@ namespace LoanManagementSys.Tasks
         private Random rnd = new Random();
         public void Run()
         {
+            while (true)
+            {
+                if (LoanSysManager.productManager.NumberOfProducts() >= 1)
+                {
+                    int products = rnd.Next(0, LoanSysManager.productManager.NumberOfProducts() - 1);
+                    int members = rnd.Next(0, LoanSysManager.memberManager.NumberOfMembers() - 1);
+                    int timer = rnd.Next(2, 6);
+                    LoanSysManager.loanItemManager.LoanProduct(members, products);
 
+                    Thread.Sleep(timer * 1000);
+                }
+            }
         }
     }
 }
