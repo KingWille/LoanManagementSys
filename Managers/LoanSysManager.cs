@@ -19,31 +19,35 @@ namespace LoanManagementSys.Managers
         {
             first = FirstOutput;
             second = SecondOutput;
+            productManager = new ProductManager();
+            memberManager = new MemberManager();
+            loanItemManager = new LoanItemManager();
+            productManager.AddTestProducts();
+            memberManager.AddMembersOnStart();
         }
 
         public void Run()
         {
-            productManager = new ProductManager();
-            memberManager = new MemberManager();
-            loanItemManager = new LoanItemManager();
-
             AdminTask adminTask = new AdminTask();
             LoanTask loanTask = new LoanTask();
             ReturnTask returnTask = new ReturnTask();
             UpdateGUI updateGUI = new UpdateGUI(this);
-            Thread t1, t2, t3, t4;
+            Thread adminThread, loanThread, returnThread, updateGuiThread;
 
-            t1 = new Thread(new ThreadStart(adminTask.Run));
-            t2 = new Thread(new ThreadStart(loanTask.Run));
-            t3 = new Thread(new ThreadStart(returnTask.Run));
-            //t4 = new Thread(new ThreadStart());
+            adminThread = new Thread(new ThreadStart(adminTask.Run));
+            loanThread = new Thread(new ThreadStart(loanTask.Run));
+            returnThread = new Thread(new ThreadStart(returnTask.Run));
+            updateGuiThread = new Thread(new ThreadStart(updateGUI.Run));
 
-            productManager.AddTestProducts();
-            memberManager.AddMembersOnStart();
+            adminThread.Start();
+            loanThread.Start();
+            returnThread.Start();
+            updateGuiThread.Start();
 
-            t1.Start();
-            t2.Start();
-            t3.Start();
+            adminThread.IsBackground = true;
+            loanThread.IsBackground= true;
+            returnThread.IsBackground = true;
+            updateGuiThread.IsBackground = true;
 
         }
     }

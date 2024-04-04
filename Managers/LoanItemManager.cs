@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,14 @@ namespace LoanManagementSys.Managers
     {
         private Dictionary<Product, Member> memberProductInfo;
         private List<Product> products;
+        private Dictionary<Product, Member> returnedProduct;
         private Random random;
+        private object lockObj;
 
         public LoanItemManager()
         {
             memberProductInfo = new Dictionary<Product, Member>();
+            returnedProduct = new Dictionary<Product, Member>();
             products = new List<Product>();
             random = new Random();
         }
@@ -23,6 +27,7 @@ namespace LoanManagementSys.Managers
             memberProductInfo.Add(LoanSysManager.productManager.Get(productIndex), LoanSysManager.memberManager.GetMember(memberIndex));
             products.Add(LoanSysManager.productManager.Get(productIndex));
             LoanSysManager.productManager.Remove(productIndex);
+            lockObj = new object();
         }
 
         internal void ReturnProduct()
@@ -32,8 +37,13 @@ namespace LoanManagementSys.Managers
                 int index = random.Next(0, products.Count());
                 Product prodtoBeReturned = products[index];
 
-                LoanSysManager.productManager.Add(prodtoBeReturned);
-                memberProductInfo.Remove(prodtoBeReturned);
+                if(!returnedProduct.ContainsKey(prodtoBeReturned))
+                {
+                    returnedProduct.Add(prodtoBeReturned, memberProductInfo[prodtoBeReturned]);
+                    LoanSysManager.productManager.Add(prodtoBeReturned);
+                    memberProductInfo.Remove(prodtoBeReturned);
+                    products.Remove(prodtoBeReturned);
+                }
             }
         }
         
@@ -50,6 +60,15 @@ namespace LoanManagementSys.Managers
         internal int NumberOfLoans()
         {
             return memberProductInfo.Count();
+        }
+
+        internal Dictionary<Product, Member> GetReturnedProduct()
+        {
+            Dictionary<Product, Member> temp = returnedProduct;
+
+            returnedProduct.Clear();
+            
+            return temp;
         }
     }
 }

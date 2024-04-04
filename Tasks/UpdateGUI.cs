@@ -1,6 +1,7 @@
 ﻿using LoanManagementSys.Managers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Text;
@@ -39,11 +40,12 @@ internal class UpdateGUI
     //updating the list of products and the list of items on loan by the controller.
     public void Run()
     {
-        try
+        while (isRunning)
         {
-            while (isRunning)
+            try
             {
 
+                Thread.Sleep(2000);
                 for (int i = 0; i < LoanSysManager.productManager.NumberOfProducts(); i++)
                 {
                     UpdateProductsSecond(LoanSysManager.productManager.Get(i).Name, i);
@@ -51,28 +53,38 @@ internal class UpdateGUI
 
                 Product lastLoan = LoanSysManager.loanItemManager.GetLastProductInfo();
 
-                UpdateProductFirst(lastLoan.Name, LoanSysManager.loanItemManager.GetMemberInfo(lastLoan).Name);
+                UpdateProductFirst(lastLoan.Name, LoanSysManager.loanItemManager.GetMemberInfo(lastLoan).Name, 0);
 
-                Thread.Sleep(2000);
+                if(LoanSysManager.loanItemManager.GetReturnedProduct().Keys.First() != null)
+                {
+                    Product returnedProd = LoanSysManager.loanItemManager.GetReturnedProduct().Keys.First();
+                    UpdateProductFirst(returnedProd.Name, LoanSysManager.loanItemManager.GetReturnedProduct()[returnedProd].Name, 1);
+                }
+
 
             }
+            catch (Exception ex)
+            {
+                //loanSys.UpdateEventLogListBox(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            //loanSys.UpdateEventLogListBox(ex.Message);
-        }
+
     }
 
-    private void UpdateProductFirst(string item, string item2)
+    private void UpdateProductFirst(string item, string item2, int i)
     {
         // Check if we need to call Invoke to marshal the call to the UI thread
         if (loanSys.first.InvokeRequired)
         {
-            loanSys.first.Invoke(new Action<string, string>(UpdateProductFirst), item, item2);
+            loanSys.first.Invoke(new Action<string, string, int>(UpdateProductFirst), item, item2, i);
         }
-        else
+        else if (i == 0)
         {
             loanSys.first.Items.Add(item + " loaned out to " + item2);
+        }
+        else if (i == 1)
+        {
+            loanSys.first.Items.Add(item2 + " returned " + item);
         }
     }
 

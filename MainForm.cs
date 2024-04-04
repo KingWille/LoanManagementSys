@@ -31,8 +31,6 @@ public partial class MainForm : Form
 
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
-        // loanThread = null;
-        // returnThread = null;
         appThread = null;
         Application.Exit();
     }
