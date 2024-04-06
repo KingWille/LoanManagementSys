@@ -13,27 +13,35 @@ namespace LoanManagementSys.Managers
         internal static ProductManager productManager;
         internal static MemberManager memberManager;
         internal static LoanItemManager loanItemManager;
+        internal static bool isRunning;
         internal ListBox first, second;
+
+        AdminTask adminTask;
+        LoanTask loanTask;
+        ReturnTask returnTask;
+        UpdateGUI updateGUI;
+        Thread adminThread, loanThread, returnThread, updateGuiThread;
 
         public LoanSysManager(ListBox FirstOutput, ListBox SecondOutput)
         {
             first = FirstOutput;
             second = SecondOutput;
+
             productManager = new ProductManager();
             memberManager = new MemberManager();
             loanItemManager = new LoanItemManager();
+
+            adminTask = new AdminTask();
+            loanTask = new LoanTask();
+            returnTask = new ReturnTask();
+            updateGUI = new UpdateGUI(this);
+
             productManager.AddTestProducts();
             memberManager.AddMembersOnStart();
         }
 
         public void Run()
         {
-            AdminTask adminTask = new AdminTask();
-            LoanTask loanTask = new LoanTask();
-            ReturnTask returnTask = new ReturnTask();
-            UpdateGUI updateGUI = new UpdateGUI(this);
-            Thread adminThread, loanThread, returnThread, updateGuiThread;
-
             adminThread = new Thread(new ThreadStart(adminTask.Run));
             loanThread = new Thread(new ThreadStart(loanTask.Run));
             returnThread = new Thread(new ThreadStart(returnTask.Run));
@@ -43,12 +51,16 @@ namespace LoanManagementSys.Managers
             loanThread.Start();
             returnThread.Start();
             updateGuiThread.Start();
+        }
 
-            adminThread.IsBackground = true;
-            loanThread.IsBackground= true;
-            returnThread.IsBackground = true;
-            updateGuiThread.IsBackground = true;
+        public void StopThreads()
+        {
+            isRunning = false;
 
+            adminThread = null;
+            loanThread = null;
+            returnThread = null;
+            updateGuiThread = null;
         }
     }
 }

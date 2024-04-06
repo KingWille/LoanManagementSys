@@ -10,13 +10,11 @@ namespace LoanManagementSys.Tasks
     internal class AdminTask
     {
         private Random rnd;
-        private bool isRunning;
         public void Run()
         {
             rnd = new Random();
-            isRunning = true;
 
-            while(isRunning)
+            while(LoanSysManager.isRunning)
             {
                 int timer = rnd.Next(6, 16);
                 LoanSysManager.productManager.AddNewTestProduct();

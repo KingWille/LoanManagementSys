@@ -17,10 +17,15 @@ namespace LoanManagementSys
         }
         internal void Run()
         {
-            while(true)
+            while(LoanSysManager.isRunning)
             {
                 int timer = random.Next(3, 15);
-                LoanSysManager.loanItemManager.ReturnProduct();
+
+                if (LoanSysManager.loanItemManager.NumberOfLoans() > 0)
+                {
+                    LoanSysManager.loanItemManager.ReturnProduct();
+                }
+
                 Thread.Sleep(timer * 1000);
             }
         }

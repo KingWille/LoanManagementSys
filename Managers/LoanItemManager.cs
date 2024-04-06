@@ -10,6 +10,8 @@ namespace LoanManagementSys.Managers
     internal class LoanItemManager
     {
         private List<LoanItem> loanItems;
+        private LoanItem lastReturnedLoanItem;
+        private LoanItem returnedItem;
         private Random random;
 
         public LoanItemManager()
@@ -28,27 +30,43 @@ namespace LoanManagementSys.Managers
             int index = random.Next(0, loanItems.Count());
 
             LoanSysManager.productManager.Add(loanItems[index].Product);
+            returnedItem = loanItems[index];
             loanItems.RemoveAt(index);
-        }
-        
-        internal Member GetMemberInfo(Product product)
-        {
-            
-        }
-
-        internal Product GetLastProductInfo()
-        {
-            
         }
 
         internal int NumberOfLoans()
         {
-            
+            return loanItems.Count;
+        }
+        internal LoanItem GetLastProductInfo()
+        {
+            if(lastReturnedLoanItem != loanItems.Last())
+            {
+                lastReturnedLoanItem = loanItems.Last();
+            }
+            else
+            {
+                lastReturnedLoanItem = null;
+            }
+
+            return lastReturnedLoanItem;
         }
 
-        internal Dictionary<Product, Member> GetReturnedProduct()
+        internal List<LoanItem> GetListLoanItems()
         {
-            
+            return loanItems;
+        }
+
+        internal LoanItem GetLoanItem(int index)
+        {
+            return loanItems[index];
+        }
+
+        internal LoanItem GetReturnedProduct()
+        {
+            var returnValue = returnedItem;
+            returnedItem = null;
+            return returnValue;
         }
     }
 }

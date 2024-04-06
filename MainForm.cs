@@ -16,7 +16,7 @@ public partial class MainForm : Form
     private void btnOK_Click(object sender, EventArgs e)
     {
         appThread = new Thread(new ThreadStart(loanSystem.Run));
-
+        LoanSysManager.isRunning = true;
         appThread.Start();   
     }
 
@@ -25,6 +25,8 @@ public partial class MainForm : Form
     private void btnStop_Click(object sender, EventArgs e)
     {
         appThread = null;
+        loanSystem.StopThreads();
+
     }
 
 

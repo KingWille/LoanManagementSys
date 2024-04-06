@@ -21,7 +21,6 @@ namespace LoanManagementSys;
 internal class UpdateGUI
 {
     private Random random;
-    private bool isRunning = true; //to start and stop the thread
     private LoanSysManager loanSys;
 
     //constructor
@@ -40,33 +39,44 @@ internal class UpdateGUI
     //updating the list of products and the list of items on loan by the controller.
     public void Run()
     {
-        while (isRunning)
+        while (LoanSysManager.isRunning)
         {
-            try
-            {
 
-                Thread.Sleep(2000);
-                for (int i = 0; i < LoanSysManager.productManager.NumberOfProducts(); i++)
+            for (int i = 0; i < LoanSysManager.productManager.NumberOfProducts(); i++)
+            {
+                if (i == 0)
                 {
+                    for(int j = 0; j < LoanSysManager.loanItemManager.GetListLoanItems().Count; j++)
+                    {
+                        UpdateProductsSecond(LoanSysManager.loanItemManager.GetLoanItem(j).Product.Name, j);
+                    }
+
+                    UpdateProductsSecond("Number of products available: " + LoanSysManager.productManager.NumberOfProducts(), 1);
+                    UpdateProductsSecond(LoanSysManager.productManager.Get(i).Name, 1);
+                }
+                else 
+                { 
                     UpdateProductsSecond(LoanSysManager.productManager.Get(i).Name, i);
                 }
-
-                Product lastLoan = LoanSysManager.loanItemManager.GetLastProductInfo();
-
-                UpdateProductFirst(lastLoan.Name, LoanSysManager.loanItemManager.GetMemberInfo(lastLoan).Name, 0);
-
-                if(LoanSysManager.loanItemManager.GetReturnedProduct().Keys.First() != null)
-                {
-                    Product returnedProd = LoanSysManager.loanItemManager.GetReturnedProduct().Keys.First();
-                    UpdateProductFirst(returnedProd.Name, LoanSysManager.loanItemManager.GetReturnedProduct()[returnedProd].Name, 1);
-                }
-
-
             }
-            catch (Exception ex)
+
+            LoanItem lastLoan = LoanSysManager.loanItemManager.GetLastProductInfo();
+
+            if (lastLoan != null)
             {
-                //loanSys.UpdateEventLogListBox(ex.Message);
+                UpdateProductFirst(lastLoan.Product.Name, lastLoan.Member.Name, 0);
             }
+
+            LoanItem returnedProd = LoanSysManager.loanItemManager.GetReturnedProduct();
+
+            if (returnedProd != null)
+            {
+                UpdateProductFirst(returnedProd.Product.Name, returnedProd.Member.Name, 1);
+            }
+
+            Thread.Sleep(2000);
+
+
         }
 
     }
@@ -99,7 +109,7 @@ internal class UpdateGUI
             if (i == 0)
             {
                 loanSys.second.Items.Clear();
-                loanSys.second.Items.Add("Number of products available: " + LoanSysManager.productManager.NumberOfProducts().ToString());
+                loanSys.second.Items.Add("Products on loan: " + LoanSysManager.loanItemManager.NumberOfLoans());
             }
 
             loanSys.second.Items.Add(item);
