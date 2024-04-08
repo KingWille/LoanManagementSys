@@ -10,6 +10,10 @@ namespace LoanManagementSys.Tasks
     internal class LoanTask
     {
         private Random rnd = new Random();
+
+        /// <summary>
+        /// Loans an item from the products list 
+        /// </summary>
         public void Run()
         {
             while (LoanSysManager.isRunning)

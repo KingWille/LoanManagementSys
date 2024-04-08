@@ -15,6 +15,10 @@ namespace LoanManagementSys
         {
             random = new Random();
         }
+
+        /// <summary>
+        /// Returns a product thats on loan if the the loan items list is not 0
+        /// </summary>
         internal void Run()
         {
             while(LoanSysManager.isRunning)

@@ -41,25 +41,29 @@ internal class UpdateGUI
     {
         while (LoanSysManager.isRunning)
         {
-
-            for (int i = 0; i < LoanSysManager.productManager.NumberOfProducts(); i++)
+            //Prints the items on loan
+            string[] loans = LoanSysManager.loanItemManager.GetLoanItemInfoStrings();
+            for (int i = 0; i < loans.Count(); i++)
             {
                 if (i == 0)
                 {
-                    for(int j = 0; j < LoanSysManager.loanItemManager.GetListLoanItems().Count; j++)
-                    {
-                        UpdateProductsSecond(LoanSysManager.loanItemManager.GetLoanItem(j).Product.Name, j);
-                    }
-
-                    UpdateProductsSecond("Number of products available: " + LoanSysManager.productManager.NumberOfProducts(), 1);
-                    UpdateProductsSecond(LoanSysManager.productManager.Get(i).Name, 1);
+                    UpdateProductsSecond(loans[i], 0);
                 }
-                else 
-                { 
-                    UpdateProductsSecond(LoanSysManager.productManager.Get(i).Name, i);
+                else
+                {
+                    UpdateProductsSecond(loans[i], 1);
                 }
             }
 
+            //Prints the available products
+            string[] products = LoanSysManager.productManager.GetProductInfoStrings();
+
+            for (int i = 0; i < products.Count(); i++)
+            {
+                UpdateProductsSecond(products[i], 1);
+            }
+
+            //Prints the last loaned out item
             LoanItem lastLoan = LoanSysManager.loanItemManager.GetLastProductInfo();
 
             if (lastLoan != null)
@@ -67,6 +71,7 @@ internal class UpdateGUI
                 UpdateProductFirst(lastLoan.Product.Name, lastLoan.Member.Name, 0);
             }
 
+            //Prints the returned item
             LoanItem returnedProd = LoanSysManager.loanItemManager.GetReturnedProduct();
 
             if (returnedProd != null)
@@ -74,13 +79,20 @@ internal class UpdateGUI
                 UpdateProductFirst(returnedProd.Product.Name, returnedProd.Member.Name, 1);
             }
 
-            Thread.Sleep(2000);
+            Thread.Sleep(3000);
 
 
         }
 
     }
 
+
+    /// <summary>
+    /// Updates the first listbox item
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="item2"></param>
+    /// <param name="i"></param>
     private void UpdateProductFirst(string item, string item2, int i)
     {
         // Check if we need to call Invoke to marshal the call to the UI thread
@@ -98,6 +110,11 @@ internal class UpdateGUI
         }
     }
 
+    /// <summary>
+    /// Updates the second listbox item
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="i"></param>
     private void UpdateProductsSecond(string item, int i)
     {
         if (loanSys.second.InvokeRequired)
@@ -109,7 +126,7 @@ internal class UpdateGUI
             if (i == 0)
             {
                 loanSys.second.Items.Clear();
-                loanSys.second.Items.Add("Products on loan: " + LoanSysManager.loanItemManager.NumberOfLoans());
+
             }
 
             loanSys.second.Items.Add(item);

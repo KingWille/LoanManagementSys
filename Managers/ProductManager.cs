@@ -121,6 +121,10 @@ namespace LoanManagementSys
             return product;
         }
 
+        /// <summary>
+        /// Returns the number of products in the product list
+        /// </summary>
+        /// <returns></returns>
         public int NumberOfProducts()
         {
             return products.Count;

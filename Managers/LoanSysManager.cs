@@ -40,6 +40,9 @@ namespace LoanManagementSys.Managers
             memberManager.AddMembersOnStart();
         }
 
+        /// <summary>
+        /// Initializes the task threads and starts them
+        /// </summary>
         public void Run()
         {
             adminThread = new Thread(new ThreadStart(adminTask.Run));
@@ -53,6 +56,9 @@ namespace LoanManagementSys.Managers
             updateGuiThread.Start();
         }
 
+        /// <summary>
+        /// Stops all threads except from the main thread
+        /// </summary>
         public void StopThreads()
         {
             isRunning = false;

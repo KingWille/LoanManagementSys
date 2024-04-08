@@ -16,6 +16,10 @@ namespace LoanManagementSys.Managers
         {
             members = new List<Member>();
         }
+
+        /// <summary>
+        /// Adds test members at the start of the program
+        /// </summary>
         internal void AddMembersOnStart()
         {
 
@@ -26,6 +30,11 @@ namespace LoanManagementSys.Managers
                 memberNameID++;
             }
         }
+
+        /// <summary>
+        /// Adds a new member to the member list
+        /// </summary>
+        /// <param name="name"></param>
         internal void AddMember(string name)
         {
             members.Add(new Member(startID, "Member" + memberNameID.ToString()));
@@ -33,23 +42,29 @@ namespace LoanManagementSys.Managers
             memberNameID++;
         }
 
+        /// <summary>
+        /// Removes a member from the member list
+        /// </summary>
+        /// <param name="index"></param>
         internal void RemoveMember(int index) 
         { 
-            try
-            {
                 members.RemoveAt(index);
-            }
-            catch
-            {
-
-            }
         }
 
+        /// <summary>
+        /// Returns the number of members in the members list
+        /// </summary>
+        /// <returns></returns>
         internal int NumberOfMembers()
         {
             return members.Count;
         }
 
+        /// <summary>
+        /// Gets a specific member at the index position of the argument
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         internal Member GetMember(int index)
         {
             try
